@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'"><title>小橘 · 桌面小窝</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><span class="brand-mark">橘</span><div>小橘<span>TANGERINE</span></div></div>
+    <div class="nav-label">你和小橘的日常</div>
+    <nav aria-label="页面导航"><button class="nav active" data-page="home"><span>⌂</span> 桌面小窝</button><button class="nav" data-page="focus"><span>◷</span> 一起专注</button><button class="nav" data-page="settings"><span>⚙</span> 小橘设置</button></nav>
+    <div class="aside-note"><span class="leaf">✳</span><p>不用一直很厉害，<br>今天也可以慢慢来。</p><small>有只小猫陪着你呢。</small></div>
+    <div class="offline"><i></i> 离线陪伴 · 本地存档</div>
+  </aside>
+  <main>
+    <header><div><div class="eyebrow">A LITTLE COMPANY, EVERY DAY</div><h1 id="page-title">今天，也一起好好生活。</h1></div><button class="outline" id="to-desktop">去桌面陪我 ↗</button></header>
+    <section id="page-home" class="page">
+      <div class="hero"><div class="hero-copy"><span class="tag">你的桌面小伙伴</span><h2>一只小橘，<br>一些平凡的好日子。</h2><p>忙的时候陪你，闲的时候撒娇。<br>小橘已经搬进你的桌面啦。</p><div class="hero-status"><i></i><span id="hero-status">正在认真陪伴你</span></div></div><div class="cat-scene"><span class="spark spark-one">✦</span><span class="spark spark-two">＋</span><div class="scene-circle"></div><canvas id="hero-cat" width="256" height="256" aria-label="橘猫动画"></canvas><div class="scene-shadow"></div><span class="scene-caption">你好呀，人类。</span></div></div>
+      <div class="stats"><div><span class="stat-icon fish">♧</span><div><small>小鱼干</small><strong id="fish">3</strong></div></div><div><span class="stat-icon heart">♡</span><div><small>亲密度</small><strong><span id="affection">0</span><em> / 100</em></strong></div></div><div><span class="stat-icon clock">◷</span><div><small>累计专注</small><strong><span id="minutes">0</span><em> 分钟</em></strong></div></div></div>
+      <div class="section-heading"><h3>和小橘玩一会儿</h3><span>小小互动，也会被记住</span></div>
+      <div class="actions"><button class="action" data-action="pet"><span>♡</span><strong>摸摸头</strong><small>收获一声呼噜</small></button><button class="action" data-action="feed"><span>♧</span><strong>喂小鱼干</strong><small>消耗 1 条鱼干</small></button><button class="action" data-action="sleep"><span>☾</span><strong>睡个小觉</strong><small>桌面上的好梦</small></button><button class="action" data-action="wake"><span>☀</span><strong>叫醒小橘</strong><small>伸个懒腰继续玩</small></button></div>
+      <div class="tip"><span>✧</span><p>单击小橘可以摸头，按住拖动可以搬家，右键打开快捷菜单。</p></div>
+    </section>
+    <section id="page-focus" class="page hidden">
+      <div class="focus-card"><span class="tag">一点点专注，一点点进步</span><h2>你负责努力，小橘负责陪你。</h2><p>完成一段专注，赚取小鱼干，给今天留下一点小成就。</p><div class="timer-face"><span id="timer-label">准备好就出发</span><strong id="timer">25:00</strong><span id="timer-detail">完成后获得 1 条小鱼干</span></div><div id="duration-options" class="duration-options"><button data-minutes="15">15 分钟</button><button data-minutes="25" class="selected">25 分钟</button><button data-minutes="45">45 分钟</button><label>自定义 <input id="custom-duration" type="number" min="5" max="120" value="25" aria-label="自定义专注分钟数"> 分钟</label></div><div class="timer-actions"><button id="timer-primary" class="primary">开始专注</button><button id="timer-cancel" class="outline hidden">结束本次</button></div><p class="focus-footnote">专注期间小橘会敲键盘陪你。暂停不计时，提前结束不发放奖励。</p></div><div class="focus-bottom"><span>✳</span><p>不需要监控屏幕或读取其他应用。<br><small>专注由你主动开启，小橘只负责计时和陪伴。</small></p><strong><span id="completed">0</span> 次<small>已完成专注</small></strong></div>
+    </section>
+    <section id="page-settings" class="page hidden">
+      <div class="settings-card"><h3>让陪伴刚刚好</h3><div class="setting-row"><div><strong>小橘的大小</strong><small>找到适合你的桌面尺寸</small></div><select id="scale" aria-label="小橘的大小"><option value="0.8">小巧</option><option value="1">标准</option><option value="1.3">大一点</option></select></div><div class="setting-row"><div><strong>偶尔散散步</strong><small>空闲时，在桌面小范围走动</small></div><label class="switch"><input id="roam" type="checkbox" checked><span></span><em class="sr-only">允许散步</em></label></div><div class="setting-row"><div><strong>始终看得见小橘</strong><small>让小橘显示在其他窗口上方</small></div><label class="switch"><input id="alwaysOnTop" type="checkbox" checked><span></span><em class="sr-only">窗口置顶</em></label></div><div class="setting-row"><div><strong>小橘躲起来了？</strong><small>将它带回主屏幕右下方</small></div><button id="reset-position" class="outline">找回小橘</button></div></div>
+      <div class="about-card"><span class="brand-mark">橘</span><div><h3>小橘 Tangerine <small>v1.0.0</small></h3><p>像素小猫，一份不打扰的陪伴。<br>无账号、无广告，数据保存在这台电脑。</p></div></div><div class="tip"><span>✧</span><p>关闭小窝后，小橘会留在桌面。右键小橘或点击系统托盘图标，即可再次打开。</p></div><button id="quit" class="text-button">退出小橘</button>
+    </section>
+    <footer>给生活留一点柔软。<span>MADE FOR YOUR EVERYDAY</span></footer>
+  </main>
+</div><div id="toast" role="status" aria-live="polite"></div><dialog id="cancel-dialog"><h3>结束这次专注？</h3><p>这次不会获得鱼干，已经完成的专注记录会保留。</p><div><button id="keep-focus" class="outline">继续专注</button><button id="confirm-cancel" class="primary">结束本次</button></div></dialog>
+<script src="cat-art.js"></script><script src="panel.js"></script></body></html>

@@ -1,0 +1,19 @@
+{
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "columns": 8,
+  "rows": [
+    "idle",
+    "walk",
+    "sleep",
+    "pet",
+    "eat",
+    "happy",
+    "focus",
+    "drag",
+    "lick",
+    "stretch",
+    "chase"
+  ],
+  "frameDurationMs": 300
+}

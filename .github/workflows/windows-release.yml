@@ -1,0 +1,92 @@
+name: Build and release Windows desktop cat
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package*.json'
+      - '.github/workflows/windows-release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tangerine-windows-release
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Verify code and timer logic
+        run: |
+          npm test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run check
+      - name: Package Windows x64 applications
+        run: npm run build:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Test the packaged Windows desktop application
+        run: node scripts/smoke-desktop.cjs
+        env:
+          TANGERINE_ELECTRON: '${{ github.workspace }}\release\win-unpacked\Tangerine.exe'
+      - name: Generate checksums
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem release/Tangerine-*.exe, release/Tangerine-*-Windows-x64.zip
+          if ($files.Count -ne 3) { throw 'Expected the portable exe, installer exe, and ZIP.' }
+          $lines = $files | ForEach-Object { '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name }
+          $lines | Set-Content -Encoding ascii release/SHA256SUMS.txt
+      - name: Retain build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tangerine-Windows-x64
+          path: |
+            release/Tangerine-*.exe
+            release/Tangerine-*-Windows-x64.zip
+            release/SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Publish downloadable release
+        shell: pwsh
+        env:
+          GH_TOKEN: '${{ github.token }}'
+          GH_REPO: '${{ github.repository }}'
+        run: |
+          $version = node -p 'require("./package.json").version'
+          $tag = "tangerine-v$version"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) { throw "Release $tag already exists; bump the package version before publishing another build." }
+          $notes = @'
+          小橘 Tangerine：Windows 10/11 64 位桌面橘猫。
+
+          推荐下载 Portable-x64.exe，双击运行，无需 Node.js 或 Python。
+          Setup-x64.exe 为安装版；Windows-x64.zip 为完整目录免安装版。
+
+          支持摸头、喂鱼、睡觉、拖动、专注计时和本地存档，日常功能离线可用。
+          本版本未做商业代码签名，首次启动可能出现未知发布者提示。
+          已通过核心逻辑测试和 Windows 打包程序冒烟检查；不同电脑的透明窗口、鼠标穿透及多屏效果仍需本机确认。
+          '@
+          $notes | Set-Content -Encoding utf8 release/release-notes.md
+          gh release create $tag --target $env:GITHUB_SHA --title "小橘 Tangerine $version" --notes-file release/release-notes.md --draft
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $assets = @(Get-ChildItem release/Tangerine-*.exe, release/Tangerine-*-Windows-x64.zip, release/SHA256SUMS.txt | ForEach-Object FullName)
+          gh release upload $tag @assets
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          gh release edit $tag --draft=false --latest
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

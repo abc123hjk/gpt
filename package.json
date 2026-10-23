@@ -1,0 +1,60 @@
+{
+  "name": "tangerine-desktop-cat",
+  "version": "1.0.0",
+  "description": "小橘 · 离线桌面陪伴与专注计时",
+  "main": "src/main.cjs",
+  "author": "Tangerine Studio",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "check": "node scripts/check.cjs",
+    "build:win": "node scripts/build-windows.cjs",
+    "build:linux": "electron-builder --linux dir"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "26.15.3",
+    "playwright-core": "^1.64.1"
+  },
+  "build": {
+    "appId": "studio.tangerine.desktopcat",
+    "publish": [],
+    "productName": "Tangerine",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "zip"
+      ],
+      "icon": "assets/icon.ico",
+      "signExecutable": false,
+      "artifactName": "Tangerine-${version}-Windows-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Tangerine-${version}-Portable-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "小橘 Tangerine",
+      "artifactName": "Tangerine-${version}-Setup-${arch}.${ext}"
+    },
+    "linux": {
+      "target": "dir",
+      "icon": "assets/icon.png",
+      "category": "Game"
+    }
+  }
+}

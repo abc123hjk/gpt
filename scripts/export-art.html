@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"></head><body><script src="../src/cat-art.js"></script><script>
+const states=['idle','walk','sleep','pet','eat','happy','focus','drag','lick','stretch','chase'];
+const canvas=document.createElement('canvas');canvas.width=canvas.height=256;
+const art={};for(const state of states){CatArt.draw(canvas.getContext('2d'),state,1.4);art[state]=canvas.toDataURL('image/png');}
+const out=document.createElement('pre');out.id='result';out.textContent=JSON.stringify(art);document.body.append(out);
+</script></body></html>
